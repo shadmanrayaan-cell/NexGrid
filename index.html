@@ -304,30 +304,176 @@
       opacity: 0.85;
     }
 
-    /* Responsive adaptation under 960px */
+    /* Responsive adaptation under 960px (Mobile Fixed-Layout Stabilization — Desktop >960px untouched) */
     @media (max-width: 960px) {
+      html, body {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        max-width: 100%;
+        height: 100%;
+        height: 100dvh;
+        min-height: 0;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        overscroll-behavior: none;
+        -webkit-text-size-adjust: 100%;
+        touch-action: manipulation;
+      }
       .stage-left, .stage-right {
-        display: none;
+        display: none !important;
       }
       .presentation-stage {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        max-width: 100%;
+        height: 100%;
+        height: 100dvh;
         padding: 0;
-        max-width: none;
+        gap: 0;
+        overflow: hidden;
       }
       .phone-frame {
-        width: 100vw;
+        position: relative;
+        width: 100%;
+        max-width: 100%;
+        height: 100%;
         height: 100dvh;
         padding: 0;
         border-radius: 0;
         box-shadow: none;
         background: var(--c-bg-app);
+        overflow: hidden;
       }
       .phone-screen {
+        position: relative;
         width: 100%;
+        max-width: 100%;
         height: 100%;
         border-radius: 0;
+        overflow: hidden;
       }
       .dynamic-island {
         display: none;
+      }
+      .status-bar {
+        padding: 12px 18px 0;
+        height: 40px;
+      }
+      .app-viewport {
+        width: 100%;
+        max-width: 100%;
+        padding: 6px 16px calc(104px + env(safe-area-inset-bottom, 0px));
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-y: contain;
+        overscroll-behavior-x: none;
+        touch-action: pan-y;
+      }
+      .screen-view {
+        animation: none !important;
+        transform: none !important;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+      .auth-fit-screen {
+        min-height: 100% !important;
+        height: 100%;
+        padding-bottom: 12px !important;
+      }
+      .card, .hero-green-card, .sub-surface {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+      }
+      .grid-2x2 {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 10px;
+      }
+      .grid-3col {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
+      }
+      .grid-2x2 > *, .grid-3col > *, .flex-between > * {
+        min-width: 0;
+      }
+      .flex-between {
+        gap: 8px;
+      }
+      .energy-flow-stage {
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+      }
+      .energy-flow-stage svg {
+        width: 100%;
+        max-width: 310px;
+        height: auto;
+      }
+      .flow-badge {
+        max-width: calc(50% - 6px);
+        padding: 5px 9px;
+      }
+      .bottom-nav-wrap {
+        bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+        left: 14px;
+        right: 14px;
+      }
+      .bottom-nav {
+        max-width: 100%;
+      }
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        height: 100dvh;
+      }
+      .modal-sheet {
+        width: 100%;
+        max-width: 100%;
+        max-height: 88dvh;
+        overflow-x: hidden;
+        overscroll-behavior-y: contain;
+        padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+      }
+      /* Prevent iOS Safari input auto-zoom viewport shift */
+      input.text-input, select {
+        font-size: 16px !important;
+      }
+      button:active:not(:disabled) {
+        transform: none;
+        opacity: 0.86;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .app-viewport {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+      .card, .hero-green-card {
+        padding: 13px;
+      }
+      .metric-big {
+        font-size: 26px;
+      }
+      .flow-badge {
+        padding: 4px 7px;
+        gap: 5px;
+      }
+      .flow-badge .b-val {
+        font-size: 11px;
+      }
+      .flow-badge .b-lbl {
+        font-size: 9.5px;
+      }
+      .nav-tab.active {
+        padding: 0 12px;
       }
     }
 
@@ -1797,7 +1943,7 @@
       // 1. Splash
       if (State.authStep === 'splash') {
         return `
-          <div class="screen-view" style="min-height:740px;display:flex;flex-direction:column;justify-content:space-between;padding:12px 6px 24px;">
+          <div class="screen-view auth-fit-screen" style="min-height:740px;display:flex;flex-direction:column;justify-content:space-between;padding:12px 6px 24px;">
             ${skipBtn}
             <div style="text-align:center;margin:auto 0;">
               <div style="display:flex;justify-content:center;margin-bottom:12px;">
@@ -1954,7 +2100,7 @@
       const cur = slides[State.onboardingSlide];
 
       return `
-        <div class="screen-view" style="min-height:740px;display:flex;flex-direction:column;justify-content:space-between;padding:8px 4px 20px;">
+        <div class="screen-view auth-fit-screen" style="min-height:740px;display:flex;flex-direction:column;justify-content:space-between;padding:8px 4px 20px;">
           ${skipBtn}
           <div class="card" style="margin:auto 0;padding:24px 20px;text-align:center;">
             <span class="chip green" style="margin-bottom:16px;">${cur.badge}</span>
@@ -2781,18 +2927,25 @@
     /* ============================================================================
        MODULE 7: RENDERERS & SCREEN CONTROLLERS
        ============================================================================ */
+    let lastRouteKey = '';
     function renderApp() {
       const viewport = document.getElementById('appViewport');
       const navWrap = document.getElementById('bottomNavWrap');
+      const subKey = State.subScreen ? (State.subScreen.type + ':' + (State.subScreen.id || '')) : 'root';
+      const currentRouteKey = [State.authStep, State.activeTab, State.panelsSubTab, subKey].join('|');
+      const isSameRoute = (currentRouteKey === lastRouteKey);
+      const savedScrollTop = viewport.scrollTop;
+      const activeEl = document.activeElement;
+      const activeId = activeEl && activeEl.id ? activeEl.id : null;
+      const selStart = (activeEl && typeof activeEl.selectionStart === 'number') ? activeEl.selectionStart : null;
+      const selEnd = (activeEl && typeof activeEl.selectionEnd === 'number') ? activeEl.selectionEnd : null;
+      lastRouteKey = currentRouteKey;
 
       if (State.authStep !== 'app') {
         navWrap.style.display = 'none';
-        viewport.style.paddingBottom = '36px';
+        viewport.style.paddingBottom = '24px';
         viewport.innerHTML = renderAuthFlow();
-        return;
-      }
-
-      if (State.subScreen) {
+      } else if (State.subScreen) {
         navWrap.style.display = 'none';
         viewport.style.paddingBottom = '40px';
         if (State.subScreen.type === 'holding') {
@@ -2802,21 +2955,35 @@
         } else if (State.subScreen.type === 'wallet') {
           viewport.innerHTML = renderWalletScreen();
         }
-        return;
+      } else {
+        navWrap.style.display = 'flex';
+        viewport.style.paddingBottom = '110px';
+        renderBottomNav();
+
+        if (State.activeTab === 'dashboard') {
+          viewport.innerHTML = renderDashboardTab();
+        } else if (State.activeTab === 'panels') {
+          viewport.innerHTML = renderPanelsTab();
+        } else if (State.activeTab === 'analytics') {
+          viewport.innerHTML = renderAnalyticsTab();
+        } else if (State.activeTab === 'settings') {
+          viewport.innerHTML = renderSettingsTab();
+        }
       }
 
-      navWrap.style.display = 'flex';
-      viewport.style.paddingBottom = '110px';
-      renderBottomNav();
-
-      if (State.activeTab === 'dashboard') {
-        viewport.innerHTML = renderDashboardTab();
-      } else if (State.activeTab === 'panels') {
-        viewport.innerHTML = renderPanelsTab();
-      } else if (State.activeTab === 'analytics') {
-        viewport.innerHTML = renderAnalyticsTab();
-      } else if (State.activeTab === 'settings') {
-        viewport.innerHTML = renderSettingsTab();
+      if (isSameRoute) {
+        const sv = viewport.querySelector('.screen-view');
+        if (sv) sv.style.animation = 'none';
+        viewport.scrollTop = savedScrollTop;
+        if (activeId) {
+          const restoredEl = document.getElementById(activeId);
+          if (restoredEl) {
+            restoredEl.focus();
+            if (selStart !== null && typeof restoredEl.setSelectionRange === 'function') {
+              try { restoredEl.setSelectionRange(selStart, selEnd); } catch (e) {}
+            }
+          }
+        }
       }
     }
 
@@ -3224,6 +3391,7 @@
             ${Icons.search}
           </span>
           <input
+            id="exploreSearchInput"
             type="text"
             class="text-input"
             style="padding-left:38px;font-size:13.5px;"
@@ -3234,7 +3402,7 @@
         </div>
 
         <!-- Filter Chips -->
-        <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:10px;margin-bottom:8px;scrollbar-width:none;">
+        <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:10px;margin-bottom:8px;scrollbar-width:none;touch-action:pan-x;overscroll-behavior-x:contain;max-width:100%;">
           ${chips.map(c => `
             <button
               class="pill-btn ${State.exploreFilter === c ? 'navy' : 'light'}"
@@ -3829,7 +3997,7 @@
               </div>
             </div>
 
-            <svg width="100%" height="${chartH + 22}" viewBox="0 0 ${chartW} ${chartH + 22}" style="overflow:visible;">
+            <svg width="100%" height="${chartH + 22}" viewBox="0 0 ${chartW} ${chartH + 22}" style="overflow:hidden;max-width:100%;display:block;">
               <line x1="10" y1="25" x2="${chartW - 10}" y2="25" stroke="#EEF0F3" stroke-dasharray="3 3"/>
               <line x1="10" y1="65" x2="${chartW - 10}" y2="65" stroke="#EEF0F3" stroke-dasharray="3 3"/>
               <line x1="10" y1="105" x2="${chartW - 10}" y2="105" stroke="#EEF0F3"/>
@@ -3942,7 +4110,7 @@
           <div class="section-hdr">
             <h3 class="section-title">Transaction Ledger</h3>
           </div>
-          <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:10px;scrollbar-width:none;">
+          <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:10px;scrollbar-width:none;touch-action:pan-x;overscroll-behavior-x:contain;max-width:100%;">
             ${txFilters.map(f => `
               <button
                 class="pill-btn ${State.txFilter === f ? 'navy' : 'light'}"
